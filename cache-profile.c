@@ -26,15 +26,14 @@ long long wall_clock_time() {
 }
 
 int main() {
-    int steps = 1024 * 1024 * 1024;
+    int steps = 1024 * 1024 * 1024 / 10;
     //static int arr[16 * 1024 * 1024];
-		char* arr = calloc(16 * 1024 * 1024,  sizeof(char));
+		char* arr = malloc(16 * 1024 * 1024 * sizeof(char));
     int lengthMod;
     int sizes[] = {
         1 * KB, 2 * KB, 4 * KB, 8 * KB, 16 * KB, 32 * KB, 64 * KB, 128 * KB, 256 * KB,
 				512 * KB, 1 * MB, 2 * MB, 4 * MB, 8 * MB, 16 * MB
     };
-    int results[sizeof(sizes)/sizeof(int)];
 		const int stride = 128;
 
     uint64_t diff;
@@ -44,9 +43,10 @@ int main() {
     for (int s = 0; s < sizeof(sizes)/sizeof(int); s++) {
 	    lengthMod = sizes[s] - 1;
 	    clock_gettime(CLOCK_REALTIME, &start);
-	    for (int i = 0; i < steps; i++) {
-	        //++arr[(i * stride) & lengthMod];
-					++arr[(i * stride) & lengthMod];
+	    for (long i = 0; i < steps; i++) {
+	        ++arr[(i * stride) & lengthMod];
+					//printf("%d\n", (i * stride) % lengthMod);
+					//++arr[(i * stride) % lengthMod];
 					//++*arr;
 	    }
 	    clock_gettime(CLOCK_REALTIME, &end); /* mark the end time */
