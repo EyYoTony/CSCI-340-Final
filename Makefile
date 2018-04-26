@@ -1,15 +1,22 @@
 CC=gcc
 # warnings all and debugging
 CFLAGS=-c -Wall -g
-CURRENT_DIR := $(shell basename `pwd`)
+CURRENT_DIR := $(mem basename `pwd`)
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
 
-all: main.c 
-	$(CC) main.c -o main
-  
+all: final
+
+final: cachewizard.o main.o
+	$(CC) cachewizard.o main.o -o main
+
+cachewizard.o: cachewizard.c cachewizard.h
+	$(CC) $(CFLAGS) cachewizard.c
+
+main.o:	main.c cachewizard.h
+	$(CC) $(CFLAGS) main.c
+
+clean:
+	/bin/rm -f main *.o *~
+
 run:
 	./main
-
-tarball:
-	@$(MAKE) -f $(THIS_FILE) clean
-	tar -cvzf ../$(CURRENT_DIR).tgz -C.. $(CURRENT_DIR)
